@@ -33,7 +33,24 @@ ATank* ATankPlayerController::GetControlledTank() const
 void ATankPlayerController::AimTowardsCrosshair() 
 {
 	if (!GetControlledTank()) { return; }
-	else {
 
+	FVector HitLocation;
+	if (GetSightRayHitLocation(HitLocation)) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit location: %s"), *HitLocation.ToString());
 	}
+}
+
+bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) const 
+{
+	// Find crosshair position in pixel coordinates
+	int32 ViewportSizeX, ViewportSizeY;
+	GetViewportSize(ViewportSizeX, ViewportSizeY);
+	auto ScreenLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
+
+	// "De-project" the screen position of the crosshair to a world direction
+
+	// Line-trace along that look direction and see what we hit
+
+	return true;
 }
