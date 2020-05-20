@@ -31,4 +31,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void Aim(FVector AimingLocation, bool AimingWithBigGun, float BigGunLaunchSpeed,  float SmallGunLaunchSpeed);
+
+	void Fire();
 };

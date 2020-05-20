@@ -2,6 +2,8 @@
 
 
 #include "TankAimingComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -39,16 +41,41 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, float BigGunLaunchSpeed, float SmallGunLaunchSpeed)
 {
-	auto TankName = GetOwner()->GetName();
-	auto BigBarrelLocation = BigBarrel->GetComponentLocation().ToString();
-	auto SmallBarrelLocation = SmallBarrel->GetComponentLocation().ToString();
+	if (!BigBarrel || !SmallBarrel) { return; }
+
+	FVector OutLaunchVelocity;
+	FVector FiringLocation;
+	float LaunchSpeed;
 
 	if (AimingWithBigGun)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Firing at %f"), BigGunLaunchSpeed);
+		FiringLocation = BigBarrel->GetSocketLocation(FName("LaunchPointBig"));
+		LaunchSpeed = BigGunLaunchSpeed;
 	}
 	else 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Firing at %f"), SmallGunLaunchSpeed);
+		FiringLocation = SmallBarrel->GetSocketLocation(FName("LaunchPointSmall"));
+		LaunchSpeed = SmallGunLaunchSpeed;
 	}
+
+	if (UGameplayStatics::SuggestProjectileVelocity(
+		this,
+		OutLaunchVelocity,
+		FiringLocation,
+		AimingLocation,
+		LaunchSpeed,
+		false,
+		0,
+		0,
+		ESuggestProjVelocityTraceOption::DoNotTrace
+	))
+	{
+		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		UE_LOG(LogTemp, Warning, TEXT("Aiming at %s"), *AimDirection.ToString());
+	}
+}
+
+void UTankAimingComponent::Fire()
+{
+
 }
