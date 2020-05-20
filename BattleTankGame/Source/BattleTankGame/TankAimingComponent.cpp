@@ -37,7 +37,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun)
+void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, float BigGunLaunchSpeed, float SmallGunLaunchSpeed)
 {
 	auto TankName = GetOwner()->GetName();
 	auto BigBarrelLocation = BigBarrel->GetComponentLocation().ToString();
@@ -45,10 +45,10 @@ void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun)
 
 	if (AimingWithBigGun)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s is aiming at %s from %s"), *TankName, *AimingLocation.ToString(), *BigBarrelLocation);
+		UE_LOG(LogTemp, Warning, TEXT("Firing at %f"), BigGunLaunchSpeed);
 	}
 	else 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s is aiming at %s from %s"), *TankName, *AimingLocation.ToString(), *SmallBarrelLocation);
+		UE_LOG(LogTemp, Warning, TEXT("Firing at %f"), SmallGunLaunchSpeed);
 	}
 }

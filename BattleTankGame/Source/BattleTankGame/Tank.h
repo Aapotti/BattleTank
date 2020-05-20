@@ -38,4 +38,10 @@ public:
 		void ChangeCannon();
 
 	bool AimingWithBigGun = true;
+
+	UPROPERTY(EditAnywhere, Category = Firing)
+		float BigGunLaunchSpeed = 100000.f;
+
+	UPROPERTY(EditAnywhere, Category = Firing)
+		float SmallGunLaunchSpeed = 70000.f;
 };

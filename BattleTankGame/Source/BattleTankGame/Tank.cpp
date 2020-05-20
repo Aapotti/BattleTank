@@ -41,7 +41,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ATank::AimAt(FVector AimingLocation)
 {
-	TankAimingComponent->Aim(AimingLocation, AimingWithBigGun);
+	TankAimingComponent->Aim(AimingLocation, AimingWithBigGun, BigGunLaunchSpeed, SmallGunLaunchSpeed);
 }
 
 void ATank::ChangeCannon()
