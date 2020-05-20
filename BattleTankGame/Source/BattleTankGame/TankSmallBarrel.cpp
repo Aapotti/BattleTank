@@ -3,7 +3,7 @@
 
 #include "TankSmallBarrel.h"
 
-void UTankSmallBarrel::Elevate(float DegreesPerSec)
+void UTankSmallBarrel::Elevate(float RelativeSpeeed)
 {
 
 }

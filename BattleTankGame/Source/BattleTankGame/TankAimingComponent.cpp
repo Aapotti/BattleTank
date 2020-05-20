@@ -68,6 +68,8 @@ void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, fl
 		FiringLocation,
 		AimingLocation,
 		LaunchSpeed,
+		0,
+		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	);
 
@@ -77,6 +79,10 @@ void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, fl
 		UE_LOG(LogTemp, Warning, TEXT("Aiming at %s"), *AimDirection.ToString());
 
 		MoveBarrel(AimDirection, AimingWithBigGun);
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No aiming solution found"));
 	}
 }
 
