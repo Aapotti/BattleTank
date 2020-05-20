@@ -2,6 +2,8 @@
 
 
 #include "TankAimingComponent.h"
+#include "TankBigBarrel.h"
+#include "TankSmallBarrel.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
 
@@ -15,7 +17,7 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-void UTankAimingComponent::SetBigBarrelReference(UStaticMeshComponent* BigBarrelToSet, UStaticMeshComponent* SmallBarrelToSet)
+void UTankAimingComponent::SetBarrelReference(UTankBigBarrel* BigBarrelToSet, UTankSmallBarrel* SmallBarrelToSet)
 {
 	BigBarrel = BigBarrelToSet;
 	SmallBarrel = SmallBarrelToSet;
@@ -58,20 +60,41 @@ void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, fl
 		LaunchSpeed = SmallGunLaunchSpeed;
 	}
 
-	if (UGameplayStatics::SuggestProjectileVelocity(
+	// This calculates where we need to point our barrel to be able to hit 
+	// the point where the crosshair is pointing
+	bool HaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(
 		this,
 		OutLaunchVelocity,
 		FiringLocation,
 		AimingLocation,
 		LaunchSpeed,
-		false,
-		0,
-		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
-	))
+	);
+
+	if(HaveAimSolution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		UE_LOG(LogTemp, Warning, TEXT("Aiming at %s"), *AimDirection.ToString());
+
+		MoveBarrel(AimDirection, AimingWithBigGun);
+	}
+}
+
+void UTankAimingComponent::MoveBarrel(FVector AimDirection, bool AimingWithBigGun)
+{
+	FRotator BarrelRotation;
+	FRotator AimAsRotator = AimDirection.Rotation();
+	FRotator DeltaRotator = AimAsRotator - BarrelRotation;
+
+	if (AimingWithBigGun) 
+	{ 
+		BarrelRotation = BigBarrel->GetForwardVector().Rotation(); 
+		BigBarrel->Elevate(5.f);
+	}
+	else 
+	{ 
+		BarrelRotation = SmallBarrel->GetForwardVector().Rotation(); 
+		SmallBarrel->Elevate(5.f);
 	}
 }
 

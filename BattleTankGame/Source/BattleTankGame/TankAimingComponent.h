@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "TankAimingComponent.generated.h"
 
+class UTankBigBarrel;
+class UTankSmallBarrel;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANKGAME_API UTankAimingComponent : public UActorComponent
@@ -16,15 +18,15 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
-	void SetBigBarrelReference(UStaticMeshComponent* BigBarrelToSet, UStaticMeshComponent* SmallBarrelToSet);
+	void SetBarrelReference(UTankBigBarrel* BigBarrelToSet, UTankSmallBarrel* SmallBarrelToSet);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 private:
-	UStaticMeshComponent* BigBarrel = nullptr;
-	UStaticMeshComponent* SmallBarrel = nullptr;
+	UTankBigBarrel* BigBarrel = nullptr;
+	UTankSmallBarrel* SmallBarrel = nullptr;
 
 public:	
 	// Called every frame
@@ -32,5 +34,6 @@ public:
 
 	void Aim(FVector AimingLocation, bool AimingWithBigGun, float BigGunLaunchSpeed,  float SmallGunLaunchSpeed);
 
+	void MoveBarrel(FVector AimDirection, bool AimingWithBigGun);
 	void Fire();
 };

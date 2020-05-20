@@ -13,9 +13,9 @@ ATank::ATank()
 }
 
 
-void ATank::SetBarrelReference(UStaticMeshComponent* BigBarrelToSet, UStaticMeshComponent* SmallBarrelToSet)
+void ATank::SetBarrelReference(UTankBigBarrel* BigBarrelToSet, UTankSmallBarrel* SmallBarrelToSet)
 {
-	TankAimingComponent->SetBigBarrelReference(BigBarrelToSet, SmallBarrelToSet);
+	TankAimingComponent->SetBarrelReference(BigBarrelToSet, SmallBarrelToSet);
 }
 
 // Called when the game starts or when spawned
