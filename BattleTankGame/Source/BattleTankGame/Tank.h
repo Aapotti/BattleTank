@@ -31,4 +31,11 @@ public:
 
 	void AimAt(FVector AimingLocation);
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+		void SetBarrelReference(UStaticMeshComponent* BigBarrelToSet, UStaticMeshComponent* SmallBarrelToSet);
+
+	UFUNCTION(BlueprintCallable, Category = Guns)
+		void ChangeCannon();
+
+	bool AimingWithBigGun = true;
 };

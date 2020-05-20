@@ -12,6 +12,12 @@ ATank::ATank()
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("AimingComponent"));
 }
 
+
+void ATank::SetBarrelReference(UStaticMeshComponent* BigBarrelToSet, UStaticMeshComponent* SmallBarrelToSet)
+{
+	TankAimingComponent->SetBigBarrelReference(BigBarrelToSet, SmallBarrelToSet);
+}
+
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
@@ -35,6 +41,19 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ATank::AimAt(FVector AimingLocation)
 {
-	TankAimingComponent->Aim(AimingLocation);
+	TankAimingComponent->Aim(AimingLocation, AimingWithBigGun);
 }
 
+void ATank::ChangeCannon()
+{
+	if (AimingWithBigGun) 
+	{ 
+		AimingWithBigGun = false; 
+		UE_LOG(LogTemp, Warning, TEXT("Small gun active"))
+	}
+	else 
+	{ 
+		AimingWithBigGun = true; 
+		UE_LOG(LogTemp, Warning, TEXT("Big gun active"))
+	}
+}

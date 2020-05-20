@@ -16,13 +16,19 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
+	void SetBigBarrelReference(UStaticMeshComponent* BigBarrelToSet, UStaticMeshComponent* SmallBarrelToSet);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+private:
+	UStaticMeshComponent* BigBarrel = nullptr;
+	UStaticMeshComponent* SmallBarrel = nullptr;
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void Aim(FVector AimingLocation);
+	void Aim(FVector AimingLocation, bool AimingWithBigGun);
 };

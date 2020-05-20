@@ -13,6 +13,11 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
+void UTankAimingComponent::SetBigBarrelReference(UStaticMeshComponent* BigBarrelToSet, UStaticMeshComponent* SmallBarrelToSet)
+{
+	BigBarrel = BigBarrelToSet;
+	SmallBarrel = SmallBarrelToSet;
+}
 
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
@@ -32,8 +37,18 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-void UTankAimingComponent::Aim(FVector AimingLocation)
+void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun)
 {
 	auto TankName = GetOwner()->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("%s is aiming at %s"), *TankName, *AimingLocation.ToString());
+	auto BigBarrelLocation = BigBarrel->GetComponentLocation().ToString();
+	auto SmallBarrelLocation = SmallBarrel->GetComponentLocation().ToString();
+
+	if (AimingWithBigGun)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s is aiming at %s from %s"), *TankName, *AimingLocation.ToString(), *BigBarrelLocation);
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s is aiming at %s from %s"), *TankName, *AimingLocation.ToString(), *SmallBarrelLocation);
+	}
 }
