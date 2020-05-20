@@ -2,6 +2,7 @@
 
 
 #include "TankPlayerController.h"
+#include "DrawDebugHelpers.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -37,7 +38,11 @@ void ATankPlayerController::AimTowardsCrosshair()
 	FVector HitLocation;
 	if (GetSightRayHitLocation(HitLocation)) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit location: %s"), *HitLocation.ToString());
+		GetControlledTank()->AimAt(HitLocation);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Line Trace Failed :("));
 	}
 }
 
@@ -46,11 +51,29 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) cons
 	// Find crosshair position in pixel coordinates
 	int32 ViewportSizeX, ViewportSizeY;
 	GetViewportSize(ViewportSizeX, ViewportSizeY);
-	auto ScreenLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
+	auto CrosshairLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
 
 	// "De-project" the screen position of the crosshair to a world direction
+	FVector CameraWorldLocation;
+	FVector WorldDirection;
+	if (DeprojectScreenPositionToWorld(CrosshairLocation.X, CrosshairLocation.Y, CameraWorldLocation, WorldDirection))
+	{
+		// Line-trace along that look direction and see what we hit
+		FHitResult ImpactPoint;
 
-	// Line-trace along that look direction and see what we hit
+		FVector StartingPoint = PlayerCameraManager->GetCameraLocation();
+		FVector EndPoint = (StartingPoint + (WorldDirection * LineTraceRange));
 
-	return true;
+		// This would visualize the line trace:
+		// DrawDebugLine(GetWorld(), StartingPoint, EndPoint, FColor::Blue, false, 1, 0, 1);
+
+		bool IsHit = GetWorld()->LineTraceSingleByChannel(ImpactPoint, StartingPoint, EndPoint, ECC_Visibility);
+
+		if (IsHit)
+		{
+			OutHitLocation = ImpactPoint.Location;
+			return true;
+		}
+	}
+	return false; // Line Trace Didn't Succeed
 }

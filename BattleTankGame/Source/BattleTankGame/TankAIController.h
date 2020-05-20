@@ -19,5 +19,9 @@ public:
 	ATank* GetAITank() const;
 	ATank* GetPlayerTank() const;
 
+	void AimAtPlayer();
+
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
 };
