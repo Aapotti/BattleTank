@@ -4,6 +4,8 @@
 #include "TankAimingComponent.h"
 #include "TankBigBarrel.h"
 #include "TankSmallBarrel.h"
+#include "BigTurret.h"
+#include "SmallTurret.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
 
@@ -21,6 +23,12 @@ void UTankAimingComponent::SetBarrelReference(UTankBigBarrel* BigBarrelToSet, UT
 {
 	BigBarrel = BigBarrelToSet;
 	SmallBarrel = SmallBarrelToSet;
+}
+
+void UTankAimingComponent::SetTurretReference(UBigTurret* BigTurretToSet, USmallTurret* SmallTurretToSet)
+{
+	BigTurret = BigTurretToSet;
+	SmallTurret = SmallTurretToSet;
 }
 
 // Called when the game starts
@@ -43,7 +51,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, float BigGunLaunchSpeed, float SmallGunLaunchSpeed)
 {
-	if (!BigBarrel || !SmallBarrel) { return; }
+	if (!BigBarrel || !SmallBarrel || !BigTurret ||!SmallTurret) { return; }
 
 	FVector OutLaunchVelocity;
 	FVector FiringLocation;
@@ -68,6 +76,7 @@ void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, fl
 		FiringLocation,
 		AimingLocation,
 		LaunchSpeed,
+		false,
 		0,
 		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
@@ -78,7 +87,7 @@ void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, fl
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		UE_LOG(LogTemp, Warning, TEXT("Aiming at %s"), *AimDirection.ToString());
 
-		MoveBarrel(AimDirection, AimingWithBigGun);
+		MoveBarrelAndTurret(AimDirection, AimingWithBigGun);
 	}
 	else 
 	{
@@ -86,21 +95,37 @@ void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, fl
 	}
 }
 
-void UTankAimingComponent::MoveBarrel(FVector AimDirection, bool AimingWithBigGun)
+void UTankAimingComponent::MoveBarrelAndTurret(FVector AimDirection, bool AimingWithBigGun)
 {
 	FRotator BarrelRotation;
+	FRotator TurretRotation;
+
 	FRotator AimAsRotator = AimDirection.Rotation();
-	FRotator DeltaRotator = AimAsRotator - BarrelRotation;
+
+	FRotator DeltaRotatorBarrel;
+	FRotator DeltaRotatorTurret;
 
 	if (AimingWithBigGun) 
 	{ 
-		BarrelRotation = BigBarrel->GetForwardVector().Rotation(); 
-		BigBarrel->Elevate(5.f);
+		BarrelRotation = BigBarrel->GetForwardVector().Rotation();
+		TurretRotation = BigTurret->GetForwardVector().Rotation();
+
+		DeltaRotatorBarrel = AimAsRotator - BarrelRotation;
+		DeltaRotatorTurret = AimAsRotator - TurretRotation;
+
+		BigBarrel->Elevate(DeltaRotatorBarrel.Pitch);
+		BigTurret->Rotate(DeltaRotatorTurret.Yaw);
 	}
 	else 
 	{ 
 		BarrelRotation = SmallBarrel->GetForwardVector().Rotation(); 
-		SmallBarrel->Elevate(5.f);
+		TurretRotation = SmallTurret->GetForwardVector().Rotation();
+
+		DeltaRotatorBarrel = AimAsRotator - BarrelRotation;
+		DeltaRotatorTurret = AimAsRotator - TurretRotation;
+		
+		SmallBarrel->Elevate(DeltaRotatorBarrel.Pitch);
+		SmallTurret->Rotate(DeltaRotatorTurret.Yaw);
 	}
 }
 

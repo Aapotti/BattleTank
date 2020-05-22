@@ -9,6 +9,9 @@
 class UTankBigBarrel;
 class UTankSmallBarrel;
 
+class UBigTurret;
+class USmallTurret;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANKGAME_API UTankAimingComponent : public UActorComponent
 {
@@ -20,6 +23,8 @@ public:
 
 	void SetBarrelReference(UTankBigBarrel* BigBarrelToSet, UTankSmallBarrel* SmallBarrelToSet);
 
+	void SetTurretReference(UBigTurret* BigTurretToSet, USmallTurret* SmallTurretToSet);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -28,12 +33,15 @@ private:
 	UTankBigBarrel* BigBarrel = nullptr;
 	UTankSmallBarrel* SmallBarrel = nullptr;
 
+	UBigTurret* BigTurret = nullptr;
+	USmallTurret* SmallTurret = nullptr;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void Aim(FVector AimingLocation, bool AimingWithBigGun, float BigGunLaunchSpeed,  float SmallGunLaunchSpeed);
 
-	void MoveBarrel(FVector AimDirection, bool AimingWithBigGun);
+	void MoveBarrelAndTurret(FVector AimDirection, bool AimingWithBigGun);
 	void Fire();
 };

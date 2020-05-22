@@ -10,6 +10,9 @@
 class UTankBigBarrel;
 class UTankSmallBarrel;
 
+class UBigTurret;
+class USmallTurret;
+
 UCLASS()
 class BATTLETANKGAME_API ATank : public APawn
 {
@@ -36,6 +39,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 		void SetBarrelReference(UTankBigBarrel* BigBarrelToSet, UTankSmallBarrel* SmallBarrelToSet);
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+		void SetTurretReference(UBigTurret* BigTurretToSet, USmallTurret* SmallTurretToSet);
 
 	UFUNCTION(BlueprintCallable, Category = Guns)
 		void ChangeCannon();
