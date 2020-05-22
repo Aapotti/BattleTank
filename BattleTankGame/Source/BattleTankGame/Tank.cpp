@@ -64,3 +64,8 @@ void ATank::ChangeCannon()
 		UE_LOG(LogTemp, Warning, TEXT("Big gun active"))
 	}
 }
+
+void ATank::Fire()
+{
+	UE_LOG(LogTemp, Warning, TEXT("FIRE!"))
+}

@@ -43,5 +43,4 @@ public:
 	void Aim(FVector AimingLocation, bool AimingWithBigGun, float BigGunLaunchSpeed,  float SmallGunLaunchSpeed);
 
 	void MoveBarrelAndTurret(FVector AimDirection, bool AimingWithBigGun);
-	void Fire();
 };

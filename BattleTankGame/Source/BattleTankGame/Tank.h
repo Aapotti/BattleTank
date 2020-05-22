@@ -46,6 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Guns)
 		void ChangeCannon();
 
+	UFUNCTION(BlueprintCallable, Category = Guns)
+		void Fire();
+
 	bool AimingWithBigGun = true;
 
 	UPROPERTY(EditAnywhere, Category = Firing)

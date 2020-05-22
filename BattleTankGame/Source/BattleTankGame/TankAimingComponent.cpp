@@ -85,7 +85,6 @@ void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, fl
 	if(HaveAimSolution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		UE_LOG(LogTemp, Warning, TEXT("Aiming at %s"), *AimDirection.ToString());
 
 		MoveBarrelAndTurret(AimDirection, AimingWithBigGun);
 	}
@@ -127,9 +126,4 @@ void UTankAimingComponent::MoveBarrelAndTurret(FVector AimDirection, bool Aiming
 		SmallBarrel->Elevate(DeltaRotatorBarrel.Pitch);
 		SmallTurret->Rotate(DeltaRotatorTurret.Yaw);
 	}
-}
-
-void UTankAimingComponent::Fire()
-{
-
 }
