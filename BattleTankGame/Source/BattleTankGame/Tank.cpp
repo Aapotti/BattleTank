@@ -76,27 +76,32 @@ void ATank::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("FIRE!"));
 
-	if (!SmallBarrel || !BigBarrel) { return; }
+	if (SmallBarrel && BigBarrel) 
+	{ 
+		FActorSpawnParameters SpawnParams;
+		FRotator SpawnRotation;
+		FVector Spawnlocation;
 
-	FActorSpawnParameters SpawnParams;
-	FRotator SpawnRotation;
-	FVector Spawnlocation; 
+		bool BigGunReloaded = (FPlatformTime::Seconds() - BigGunLastFireTime) > BigGunReloadTimeInSeconds;
+		bool SmallGunReloaded = (FPlatformTime::Seconds() - SmallGunLastFireTime) > SmallGunReloadTimeInSeconds;
 
+		if (AimingWithBigGun && BigGunReloaded)
+		{
+			Spawnlocation = BigBarrel->GetSocketLocation(FName("Cannon"));
+			SpawnRotation = BigBarrel->GetSocketRotation(FName("Cannon"));
+			auto Projectile = GetWorld()->SpawnActor<ATankProjectile>(ProjectileBlueprint, Spawnlocation, SpawnRotation, SpawnParams);
 
-	if (AimingWithBigGun)
-	{
-		Spawnlocation = BigBarrel->GetSocketLocation(FName("Cannon"));
-		SpawnRotation = BigBarrel->GetSocketRotation(FName("Cannon"));
-		auto Projectile = GetWorld()->SpawnActor<ATankProjectile>(ProjectileBlueprint, Spawnlocation, SpawnRotation, SpawnParams);
+			Projectile->FireProjectile(BigGunLaunchSpeed);
+			BigGunLastFireTime = FPlatformTime::Seconds();
+		}
+		else if(!AimingWithBigGun && SmallGunReloaded)
+		{
+			Spawnlocation = SmallBarrel->GetSocketLocation(FName("Small_Cannon"));
+			SpawnRotation = SmallBarrel->GetSocketRotation(FName("Small_Cannon"));
+			auto Projectile = GetWorld()->SpawnActor<ATankSmallProjectile>(SmallProjectileBlueprint, Spawnlocation, SpawnRotation, SpawnParams);
 
-		Projectile->FireProjectile(BigGunLaunchSpeed);
-	}
-	else
-	{
-		Spawnlocation = SmallBarrel->GetSocketLocation(FName("Small_Cannon"));
-		SpawnRotation = SmallBarrel->GetSocketRotation(FName("Small_Cannon"));
-		auto Projectile = GetWorld()->SpawnActor<ATankSmallProjectile>(SmallProjectileBlueprint, Spawnlocation, SpawnRotation, SpawnParams);
-
-		Projectile->FireProjectile(BigGunLaunchSpeed);
+			Projectile->FireProjectile(BigGunLaunchSpeed);
+			SmallGunLastFireTime = FPlatformTime::Seconds();
+		}
 	}
 }

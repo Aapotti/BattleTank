@@ -68,4 +68,8 @@ public:
 
 	UTankBigBarrel* BigBarrel = nullptr;
 	UTankSmallBarrel* SmallBarrel = nullptr;
+
+	float BigGunReloadTimeInSeconds = 2.f, SmallGunReloadTimeInSeconds = .3f;
+
+	double BigGunLastFireTime = 0, SmallGunLastFireTime = 0;
 };

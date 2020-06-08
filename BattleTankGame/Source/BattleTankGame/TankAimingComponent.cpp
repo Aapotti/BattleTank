@@ -51,7 +51,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, float BigGunLaunchSpeed, float SmallGunLaunchSpeed)
 {
-	if (!BigBarrel || !SmallBarrel || !BigTurret ||!SmallTurret) { return; }
+	if (!BigBarrel || !SmallBarrel || !BigTurret || !SmallTurret) { return; }
 
 	FVector OutLaunchVelocity;
 	FVector FiringLocation;
@@ -59,12 +59,12 @@ void UTankAimingComponent::Aim(FVector AimingLocation, bool AimingWithBigGun, fl
 
 	if (AimingWithBigGun)
 	{
-		FiringLocation = BigBarrel->GetSocketLocation(FName("LaunchPointBig"));
+		FiringLocation = BigBarrel->GetSocketLocation(FName("Cannon"));
 		LaunchSpeed = BigGunLaunchSpeed;
 	}
 	else 
 	{
-		FiringLocation = SmallBarrel->GetSocketLocation(FName("LaunchPointSmall"));
+		FiringLocation = SmallBarrel->GetSocketLocation(FName("Small_Cannon"));
 		LaunchSpeed = SmallGunLaunchSpeed;
 	}
 

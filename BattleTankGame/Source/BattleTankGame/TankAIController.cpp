@@ -2,6 +2,7 @@
 
 
 #include "TankAIController.h"
+#include "Engine/World.h"
 
 void ATankAIController::BeginPlay()
 {
@@ -26,6 +27,8 @@ void ATankAIController::Tick(float DeltaTime)
 	if (GetPlayerTank())
 	{
 		AimAtPlayer();
+
+		GetAITank()->Fire();
 	}
 }
 
