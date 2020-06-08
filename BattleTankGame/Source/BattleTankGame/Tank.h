@@ -13,6 +13,9 @@ class UTankSmallBarrel;
 class UBigTurret;
 class USmallTurret;
 
+class ATankProjectile;
+class ATankSmallProjectile;
+
 UCLASS()
 class BATTLETANKGAME_API ATank : public APawn
 {
@@ -56,4 +59,13 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Firing)
 		float SmallGunLaunchSpeed = 70000.f;
+
+	UPROPERTY(EditAnywhere, Category = Firing)
+		TSubclassOf<ATankProjectile> ProjectileBlueprint;
+
+	UPROPERTY(EditAnywhere, Category = Firing)
+		TSubclassOf<ATankSmallProjectile> SmallProjectileBlueprint;
+
+	UTankBigBarrel* BigBarrel = nullptr;
+	UTankSmallBarrel* SmallBarrel = nullptr;
 };

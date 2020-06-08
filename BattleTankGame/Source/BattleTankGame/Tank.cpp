@@ -2,6 +2,11 @@
 
 
 #include "Tank.h"
+#include "TankBigBarrel.h"
+#include "TankSmallBarrel.h"
+#include "TankProjectile.h"
+#include "TankSmallProjectile.h"
+#include "Engine/World.h"
 
 // Sets default values
 ATank::ATank()
@@ -16,6 +21,8 @@ ATank::ATank()
 void ATank::SetBarrelReference(UTankBigBarrel* BigBarrelToSet, UTankSmallBarrel* SmallBarrelToSet)
 {
 	TankAimingComponent->SetBarrelReference(BigBarrelToSet, SmallBarrelToSet);
+	BigBarrel = BigBarrelToSet;
+	SmallBarrel = SmallBarrelToSet;
 }
 
 
@@ -67,5 +74,29 @@ void ATank::ChangeCannon()
 
 void ATank::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("FIRE!"))
+	UE_LOG(LogTemp, Warning, TEXT("FIRE!"));
+
+	if (!SmallBarrel || !BigBarrel) { return; }
+
+	FActorSpawnParameters SpawnParams;
+	FRotator SpawnRotation;
+	FVector Spawnlocation; 
+
+
+	if (AimingWithBigGun)
+	{
+		Spawnlocation = BigBarrel->GetSocketLocation(FName("Cannon"));
+		SpawnRotation = BigBarrel->GetSocketRotation(FName("Cannon"));
+		auto Projectile = GetWorld()->SpawnActor<ATankProjectile>(ProjectileBlueprint, Spawnlocation, SpawnRotation, SpawnParams);
+
+		Projectile->FireProjectile(BigGunLaunchSpeed);
+	}
+	else
+	{
+		Spawnlocation = SmallBarrel->GetSocketLocation(FName("Small_Cannon"));
+		SpawnRotation = SmallBarrel->GetSocketRotation(FName("Small_Cannon"));
+		auto Projectile = GetWorld()->SpawnActor<ATankSmallProjectile>(SmallProjectileBlueprint, Spawnlocation, SpawnRotation, SpawnParams);
+
+		Projectile->FireProjectile(BigGunLaunchSpeed);
+	}
 }
