@@ -69,7 +69,24 @@ public:
 	UTankBigBarrel* BigBarrel = nullptr;
 	UTankSmallBarrel* SmallBarrel = nullptr;
 
-	float BigGunReloadTimeInSeconds = 2.f, SmallGunReloadTimeInSeconds = .3f;
+	UPROPERTY(EditDefaultsOnly, Category = Firing) 
+		float BigGunReloadTimeInSeconds = 2.f, SmallGunReloadTimeInSeconds = .3f;
 
 	double BigGunLastFireTime = 0, SmallGunLastFireTime = 0;
+
+	UFUNCTION(BlueprintCallable, Category = Movement)
+		void Move(float MovementSpeed);
+
+	UFUNCTION(BlueprintCallable, Category = Movement)
+		void Turn(float TurningSpeed);
+
+	FVector TankCurrentVelocity;
+	float TankTurningSpeed = 0;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+		float MovementSpeed = 1;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+		float TurningRatio = 1;
+
 };

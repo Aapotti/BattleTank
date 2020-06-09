@@ -37,6 +37,7 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 	
+
 }
 
 // Called every frame
@@ -44,6 +45,11 @@ void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Turning the tank
+	if (TankTurningSpeed != 0)
+	{
+		SetActorRotation(GetActorRotation() + (FRotator(0, TankTurningSpeed, 0) * DeltaTime));
+	}
 }
 
 // Called to bind functionality to input
@@ -74,8 +80,6 @@ void ATank::ChangeCannon()
 
 void ATank::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("FIRE!"));
-
 	if (SmallBarrel && BigBarrel) 
 	{ 
 		FActorSpawnParameters SpawnParams;
@@ -104,4 +108,19 @@ void ATank::Fire()
 			SmallGunLastFireTime = FPlatformTime::Seconds();
 		}
 	}
+}
+
+
+// Movement
+void ATank::Move(float Speed)
+{
+	auto ForceApplied = GetActorForwardVector() * MovementSpeed * Speed;
+	auto ForceLocation = GetActorLocation();
+	auto Tank = Cast<UPrimitiveComponent>(GetRootComponent());
+	Tank->AddForceAtLocation(ForceApplied, ForceLocation);
+}
+
+void ATank::Turn(float TurningSpeed)
+{
+	TankTurningSpeed = TurningSpeed * 100.f * TurningRatio;
 }
